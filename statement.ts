@@ -1,7 +1,10 @@
-const plays = require("./plays.json");
-const invoices = require("./invoices.json");
+import plays from "./plays.json";
+import invoice from "./invoices.json";
 
-function statement(invoice, plays) {
+type Invoice = typeof invoice;
+type Play = typeof plays;
+
+function statement(invoice: Invoice, plays: Play): string {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
@@ -48,4 +51,4 @@ function statement(invoice, plays) {
   return result;
 }
 
-console.log(statement(invoices, plays));
+console.log(statement(invoice, plays));
