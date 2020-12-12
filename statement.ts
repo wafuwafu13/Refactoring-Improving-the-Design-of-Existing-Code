@@ -10,8 +10,13 @@ type Play = Plays[Performance["playID"]];
 function statement(invoice: Invoice) {
   const statementData: Partial<Invoice> = {};
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances;
+  statementData.performances = invoice.performances.map<Performance>(enrichPerformance);
   return renderPlainText(statementData);
+
+  function enrichPerformance(aPerformance: Performance) {
+    const result = Object.assign({}, aPerformance);
+    return result;
+  }
 }
 
 function renderPlainText(data: Partial<Invoice>) {
