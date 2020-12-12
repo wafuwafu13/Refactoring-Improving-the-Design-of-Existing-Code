@@ -33,10 +33,10 @@ function statement(invoice: Invoice) {
   }
 }
 
-function renderPlainText(data: Partial<Invoice>) {
+function renderPlainText(data: StatementData) {
   let result = `Statement for ${data.customer}\n`;
   for (let perf of data.performances!) {
-    result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${
+    result += `  ${perf.play!.name}: ${usd(amountFor(perf))} (${
       perf.audience
     } seats)\n`;
   }
@@ -44,9 +44,9 @@ function renderPlainText(data: Partial<Invoice>) {
   result += `You earned ${totalVolumeCredits()} credits\n`;
   return result;
 
-  function amountFor(aPerformance: Performance): number {
+  function amountFor(aPerformance: Required<StatementData>["performances"][0]): number {
     let result = 0;
-    switch (playFor(aPerformance).type) {
+    switch (aPerformance.play!.type) {
       case "tragedy":
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -61,19 +61,15 @@ function renderPlainText(data: Partial<Invoice>) {
         result += 300 * aPerformance.audience;
         break;
       default:
-        throw new Error(`unknown type: ${playFor(aPerformance).type}`);
+        throw new Error(`unknown type: ${aPerformance.play!.type}`);
     }
     return result;
   }
 
-  function playFor(aPerformance: Performance): Play {
-    return plays[aPerformance.playID];
-  }
-
-  function volumeCreditsFor(aPerformance: Performance): number {
+  function volumeCreditsFor(aPerformance: Required<StatementData>["performances"][0]): number {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" == playFor(aPerformance).type)
+    if ("comedy" == aPerformance.play!.type)
       result += Math.floor(aPerformance.audience / 5);
     return result;
   }
