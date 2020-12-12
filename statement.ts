@@ -13,6 +13,7 @@ type StatementData = {
     playID: Performance["playID"];
     audience: number;
     play?: Play;
+    amount?: number;
   }[];
 };
 
@@ -27,6 +28,7 @@ function statement(invoice: Invoice): string {
   ): Required<StatementData>["performances"][0] {
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
+    result.amount = amountFor(result);
     return result;
   }
 
@@ -35,18 +37,6 @@ function statement(invoice: Invoice): string {
   ): Play {
     return plays[aPerformance!.playID];
   }
-}
-
-function renderPlainText(data: StatementData): string {
-  let result = `Statement for ${data.customer}\n`;
-  for (let perf of data.performances!) {
-    result += `  ${perf.play!.name}: ${usd(amountFor(perf))} (${
-      perf.audience
-    } seats)\n`;
-  }
-  result += `Amount owed is ${usd(totalAmount())}\n`;
-  result += `You earned ${totalVolumeCredits()} credits\n`;
-  return result;
 
   function amountFor(
     aPerformance: Required<StatementData>["performances"][0]
@@ -71,6 +61,18 @@ function renderPlainText(data: StatementData): string {
     }
     return result;
   }
+}
+
+function renderPlainText(data: StatementData): string {
+  let result = `Statement for ${data.customer}\n`;
+  for (let perf of data.performances!) {
+    result += `  ${perf.play!.name}: ${usd(perf.amount!)} (${
+      perf.audience
+    } seats)\n`;
+  }
+  result += `Amount owed is ${usd(totalAmount())}\n`;
+  result += `You earned ${totalVolumeCredits()} credits\n`;
+  return result;
 
   function volumeCreditsFor(
     aPerformance: Required<StatementData>["performances"][0]
@@ -101,7 +103,7 @@ function renderPlainText(data: StatementData): string {
   function totalAmount(): number {
     let result = 0;
     for (let perf of data.performances!) {
-      result += amountFor(perf);
+      result += perf.amount!;
     }
     return result;
   }
