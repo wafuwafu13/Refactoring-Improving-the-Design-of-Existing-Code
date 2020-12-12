@@ -79,19 +79,19 @@ function statement(invoice: Invoice): string {
   }
 
   function totalAmount(data: StatementData): number {
-    let result = 0;
-    for (let perf of data.performances!) {
-      result += perf.amount!;
-    }
-    return result;
+    return data.performances!.reduce(
+      (total: number, p: Required<StatementData>["performances"][0]) =>
+        total + p.amount!,
+      0
+    );
   }
 
   function totalVolumeCredits(data: StatementData): number {
-    let result = 0;
-    for (let perf of data.performances!) {
-      result += perf.volumeCredits!;
-    }
-    return result;
+    return data.performances!.reduce(
+      (total: number, p: Required<StatementData>["performances"][0]) =>
+        total + p.volumeCredits!,
+      0
+    );
   }
 }
 
