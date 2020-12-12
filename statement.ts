@@ -21,12 +21,16 @@ type StatementData = {
 };
 
 function statement(invoice: Invoice): string {
+  return renderPlainText(createStatementData(invoice));
+}
+
+function createStatementData(invoice: Invoice): StatementData {
   const statementData: StatementData = {};
   statementData.customer = invoice.customer;
   statementData.performances = invoice.performances.map(enrichPerformance);
   statementData.totalAmount = totalAmount(statementData);
   statementData.totalVolumeCredits = totalVolumeCredits(statementData);
-  return renderPlainText(statementData);
+  return statementData;
 
   function enrichPerformance(
     aPerformance: Required<StatementData>["performances"][0]
