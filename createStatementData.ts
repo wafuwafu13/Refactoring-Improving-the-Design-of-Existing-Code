@@ -1,5 +1,10 @@
 import plays from "./plays.json";
-import { Invoice, StatementData, Play } from "./@types/types";
+import {
+  Invoice,
+  StatementData,
+  Play,
+  StatementPerformance,
+} from "./@types/types";
 
 export default function createStatementData(invoice: Invoice): StatementData {
   const statementData: StatementData = {};
@@ -10,8 +15,8 @@ export default function createStatementData(invoice: Invoice): StatementData {
   return statementData;
 
   function enrichPerformance(
-    aPerformance: Required<StatementData>["performances"][0]
-  ): Required<StatementData>["performances"][0] {
+    aPerformance: StatementPerformance
+  ): StatementPerformance {
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
     result.amount = amountFor(result);
@@ -19,15 +24,11 @@ export default function createStatementData(invoice: Invoice): StatementData {
     return result;
   }
 
-  function playFor(
-    aPerformance: Required<StatementData>["performances"][0]
-  ): Play {
+  function playFor(aPerformance: StatementPerformance): Play {
     return plays[aPerformance!.playID];
   }
 
-  function amountFor(
-    aPerformance: Required<StatementData>["performances"][0]
-  ): number {
+  function amountFor(aPerformance: StatementPerformance): number {
     let result = 0;
     switch (aPerformance.play!.type) {
       case "tragedy":
@@ -49,9 +50,7 @@ export default function createStatementData(invoice: Invoice): StatementData {
     return result;
   }
 
-  function volumeCreditsFor(
-    aPerformance: Required<StatementData>["performances"][0]
-  ): number {
+  function volumeCreditsFor(aPerformance: StatementPerformance): number {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
     if ("comedy" == aPerformance.play!.type)
@@ -61,16 +60,14 @@ export default function createStatementData(invoice: Invoice): StatementData {
 
   function totalAmount(data: StatementData): number {
     return data.performances!.reduce(
-      (total: number, p: Required<StatementData>["performances"][0]) =>
-        total + p.amount!,
+      (total: number, p: StatementPerformance) => total + p.amount!,
       0
     );
   }
 
   function totalVolumeCredits(data: StatementData): number {
     return data.performances!.reduce(
-      (total: number, p: Required<StatementData>["performances"][0]) =>
-        total + p.volumeCredits!,
+      (total: number, p: StatementPerformance) => total + p.volumeCredits!,
       0
     );
   }

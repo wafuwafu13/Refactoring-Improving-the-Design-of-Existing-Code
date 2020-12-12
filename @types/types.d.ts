@@ -19,3 +19,5 @@ export type StatementData = {
   totalAmount?: number;
   totalVolumeCredits?: number;
 };
+
+export type StatementPerformance = Required<StatementData>["performances"][0];
