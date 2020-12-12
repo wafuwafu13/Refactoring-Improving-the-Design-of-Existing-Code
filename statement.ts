@@ -7,7 +7,7 @@ type Plays = typeof plays;
 type Performance = typeof invoice.performances[0];
 type Play = Plays[Performance["playID"]];
 
-function statement(invoice: Invoice, plays: Plays): string {
+function statement(invoice: Invoice): string {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
@@ -50,7 +50,7 @@ function playFor(aPerformance: Performance): Play {
   return plays[aPerformance.playID];
 }
 
-function volumeCreditsFor(aPerformance: Performance) {
+function volumeCreditsFor(aPerformance: Performance): number {
   let result = 0;
   result += Math.max(aPerformance.audience - 30, 0);
   if ("comedy" == playFor(aPerformance).type)
@@ -66,4 +66,4 @@ function usd(aNumber: number): string {
   }).format(aNumber / 100);
 }
 
-console.log(statement(invoice, plays));
+console.log(statement(invoice));
