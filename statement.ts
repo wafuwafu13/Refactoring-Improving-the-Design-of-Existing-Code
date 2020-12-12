@@ -7,15 +7,29 @@ type Plays = typeof plays;
 type Performance = typeof invoice.performances[0];
 type Play = Plays[Performance["playID"]];
 
+type StatementData = {
+  customer?: string;
+  performances?: {
+      playID: Performance["playID"];
+      audience: number;
+      play?: Play
+  }[];
+}
+
 function statement(invoice: Invoice) {
-  const statementData: Partial<Invoice> = {};
+  const statementData: StatementData = {};
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances.map<Performance>(enrichPerformance);
+  statementData.performances = invoice.performances.map(enrichPerformance);
   return renderPlainText(statementData);
 
-  function enrichPerformance(aPerformance: Performance) {
+  function enrichPerformance(aPerformance: Required<StatementData>["performances"][0]) {
     const result = Object.assign({}, aPerformance);
+    result.play = playFor(result)
     return result;
+  }
+
+  function playFor(aPerformance: Required<StatementData>["performances"][0]): Play {
+    return plays[aPerformance!.playID]
   }
 }
 
