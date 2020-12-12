@@ -10,7 +10,6 @@ type Play = Plays[Performance["playID"]];
 function statement(invoice: Invoice): string {
   let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
-    // 注文の内訳を出力
     result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
     } seats)\n`;
