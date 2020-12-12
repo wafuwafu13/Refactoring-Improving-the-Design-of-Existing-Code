@@ -7,7 +7,11 @@ type Plays = typeof plays;
 type Performance = typeof invoice.performances[0];
 type Play = Plays[Performance["playID"]];
 
-function statement(invoice: Invoice): string {
+function statement(invoice: Invoice) {
+  return renderPlainText(invoice);
+}
+
+function renderPlainText(invoice: Invoice) {
   let result = `Statement for ${invoice.customer}\n`;
   for (let perf of invoice.performances) {
     result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${
