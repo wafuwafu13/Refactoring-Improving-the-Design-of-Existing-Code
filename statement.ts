@@ -10,11 +10,11 @@ type Play = Plays[Performance["playID"]];
 type StatementData = {
   customer?: string;
   performances?: {
-      playID: Performance["playID"];
-      audience: number;
-      play?: Play
+    playID: Performance["playID"];
+    audience: number;
+    play?: Play;
   }[];
-}
+};
 
 function statement(invoice: Invoice) {
   const statementData: StatementData = {};
@@ -22,14 +22,18 @@ function statement(invoice: Invoice) {
   statementData.performances = invoice.performances.map(enrichPerformance);
   return renderPlainText(statementData);
 
-  function enrichPerformance(aPerformance: Required<StatementData>["performances"][0]) {
+  function enrichPerformance(
+    aPerformance: Required<StatementData>["performances"][0]
+  ) {
     const result = Object.assign({}, aPerformance);
-    result.play = playFor(result)
+    result.play = playFor(result);
     return result;
   }
 
-  function playFor(aPerformance: Required<StatementData>["performances"][0]): Play {
-    return plays[aPerformance!.playID]
+  function playFor(
+    aPerformance: Required<StatementData>["performances"][0]
+  ): Play {
+    return plays[aPerformance!.playID];
   }
 }
 
@@ -44,7 +48,9 @@ function renderPlainText(data: StatementData) {
   result += `You earned ${totalVolumeCredits()} credits\n`;
   return result;
 
-  function amountFor(aPerformance: Required<StatementData>["performances"][0]): number {
+  function amountFor(
+    aPerformance: Required<StatementData>["performances"][0]
+  ): number {
     let result = 0;
     switch (aPerformance.play!.type) {
       case "tragedy":
@@ -66,7 +72,9 @@ function renderPlainText(data: StatementData) {
     return result;
   }
 
-  function volumeCreditsFor(aPerformance: Required<StatementData>["performances"][0]): number {
+  function volumeCreditsFor(
+    aPerformance: Required<StatementData>["performances"][0]
+  ): number {
     let result = 0;
     result += Math.max(aPerformance.audience - 30, 0);
     if ("comedy" == aPerformance.play!.type)
