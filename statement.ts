@@ -16,12 +16,16 @@ type StatementData = {
     amount?: number;
     volumeCredits?: number;
   }[];
+  totalAmount?: number;
+  totalVolumeCredits?: number;
 };
 
 function statement(invoice: Invoice): string {
   const statementData: StatementData = {};
   statementData.customer = invoice.customer;
   statementData.performances = invoice.performances.map(enrichPerformance);
+  statementData.totalAmount = totalAmount(statementData);
+  statementData.totalVolumeCredits = totalVolumeCredits(statementData);
   return renderPlainText(statementData);
 
   function enrichPerformance(
@@ -73,6 +77,22 @@ function statement(invoice: Invoice): string {
       result += Math.floor(aPerformance.audience / 5);
     return result;
   }
+
+  function totalAmount(data: StatementData): number {
+    let result = 0;
+    for (let perf of data.performances!) {
+      result += perf.amount!;
+    }
+    return result;
+  }
+
+  function totalVolumeCredits(data: StatementData): number {
+    let result = 0;
+    for (let perf of data.performances!) {
+      result += perf.volumeCredits!;
+    }
+    return result;
+  }
 }
 
 function renderPlainText(data: StatementData): string {
@@ -82,8 +102,8 @@ function renderPlainText(data: StatementData): string {
       perf.audience
     } seats)\n`;
   }
-  result += `Amount owed is ${usd(totalAmount())}\n`;
-  result += `You earned ${totalVolumeCredits()} credits\n`;
+  result += `Amount owed is ${usd(data.totalAmount!)}\n`;
+  result += `You earned ${data.totalVolumeCredits} credits\n`;
   return result;
 
   function usd(aNumber: number): string {
@@ -92,22 +112,6 @@ function renderPlainText(data: StatementData): string {
       currency: "USD",
       minimumIntegerDigits: 2,
     }).format(aNumber / 100);
-  }
-
-  function totalVolumeCredits(): number {
-    let result = 0;
-    for (let perf of data.performances!) {
-      result += perf.volumeCredits!;
-    }
-    return result;
-  }
-
-  function totalAmount(): number {
-    let result = 0;
-    for (let perf of data.performances!) {
-      result += perf.amount!;
-    }
-    return result;
   }
 }
 
