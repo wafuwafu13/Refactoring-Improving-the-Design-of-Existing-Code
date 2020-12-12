@@ -18,7 +18,7 @@ function statement(invoice: Invoice, plays: Plays): string {
   }).format;
 
   for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
+    const play = playFor(perf);
     let thisAmount = amountFor(perf, play);
 
     // ボリューム得点のポイントを加算
@@ -56,6 +56,10 @@ function amountFor(aPerformance: Performance, play: Play): number {
       throw new Error(`unknown type: ${play.type}`);
   }
   return result;
+}
+
+function playFor(aPerformance: Performance): Play {
+  return plays[aPerformance.playID]
 }
 
 console.log(statement(invoice, plays));
