@@ -16,7 +16,7 @@ type StatementData = {
   }[];
 };
 
-function statement(invoice: Invoice) {
+function statement(invoice: Invoice): string {
   const statementData: StatementData = {};
   statementData.customer = invoice.customer;
   statementData.performances = invoice.performances.map(enrichPerformance);
@@ -24,7 +24,7 @@ function statement(invoice: Invoice) {
 
   function enrichPerformance(
     aPerformance: Required<StatementData>["performances"][0]
-  ) {
+  ): Required<StatementData>["performances"][0] {
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
     return result;
@@ -37,7 +37,7 @@ function statement(invoice: Invoice) {
   }
 }
 
-function renderPlainText(data: StatementData) {
+function renderPlainText(data: StatementData): string {
   let result = `Statement for ${data.customer}\n`;
   for (let perf of data.performances!) {
     result += `  ${perf.play!.name}: ${usd(amountFor(perf))} (${
@@ -90,7 +90,7 @@ function renderPlainText(data: StatementData) {
     }).format(aNumber / 100);
   }
 
-  function totalVolumeCredits() {
+  function totalVolumeCredits(): number {
     let result = 0;
     for (let perf of data.performances!) {
       result += volumeCreditsFor(perf);
@@ -98,7 +98,7 @@ function renderPlainText(data: StatementData) {
     return result;
   }
 
-  function totalAmount() {
+  function totalAmount(): number {
     let result = 0;
     for (let perf of data.performances!) {
       result += amountFor(perf);
