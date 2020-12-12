@@ -6,6 +6,13 @@ import {
   StatementPerformance,
 } from "./@types/types";
 
+class PerformanceCalculator {
+  performance: StatementPerformance;
+  constructor(aPerformance: StatementPerformance) {
+    this.performance = aPerformance;
+  }
+}
+
 export default function createStatementData(invoice: Invoice): StatementData {
   const statementData: StatementData = {};
   statementData.customer = invoice.customer;
@@ -17,6 +24,7 @@ export default function createStatementData(invoice: Invoice): StatementData {
   function enrichPerformance(
     aPerformance: StatementPerformance
   ): StatementPerformance {
+    const calculator = new PerformanceCalculator(aPerformance);
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
     result.amount = amountFor(result);
