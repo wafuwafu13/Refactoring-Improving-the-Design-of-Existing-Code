@@ -10,12 +10,13 @@ type Play = Plays[Performance["playID"]];
 function statement(invoice: Invoice) {
   const statementData: Partial<Invoice> = {};
   statementData.customer = invoice.customer;
-  return renderPlainText(statementData, invoice);
+  statementData.performances = invoice.performances;
+  return renderPlainText(statementData);
 }
 
-function renderPlainText(data: Partial<Invoice>, invoice: Invoice) {
+function renderPlainText(data: Partial<Invoice>) {
   let result = `Statement for ${data.customer}\n`;
-  for (let perf of invoice.performances) {
+  for (let perf of data.performances!) {
     result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
     } seats)\n`;
@@ -68,7 +69,7 @@ function renderPlainText(data: Partial<Invoice>, invoice: Invoice) {
 
   function totalVolumeCredits() {
     let result = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances!) {
       result += volumeCreditsFor(perf);
     }
     return result;
@@ -76,7 +77,7 @@ function renderPlainText(data: Partial<Invoice>, invoice: Invoice) {
 
   function totalAmount() {
     let result = 0;
-    for (let perf of invoice.performances) {
+    for (let perf of data.performances!) {
       result += amountFor(perf);
     }
     return result;
