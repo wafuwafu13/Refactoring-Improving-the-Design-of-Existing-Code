@@ -4,8 +4,8 @@ import invoice from "./invoices.json";
 type Invoice = typeof invoice;
 type Plays = typeof plays;
 
-type Performance = typeof invoice.performances[0]
-type Play = Plays[Performance['playID']]
+type Performance = typeof invoice.performances[0];
+type Play = Plays[Performance["playID"]];
 
 function statement(invoice: Invoice, plays: Plays): string {
   let totalAmount = 0;
@@ -47,13 +47,14 @@ function amountFor(aPerformance: Performance): number {
 }
 
 function playFor(aPerformance: Performance): Play {
-  return plays[aPerformance.playID]
+  return plays[aPerformance.playID];
 }
 
 function volumeCreditsFor(aPerformance: Performance) {
   let result = 0;
   result += Math.max(aPerformance.audience - 30, 0);
-  if ("comedy" == playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5);
+  if ("comedy" == playFor(aPerformance).type)
+    result += Math.floor(aPerformance.audience / 5);
   return result;
 }
 
@@ -62,7 +63,7 @@ function usd(aNumber: number): string {
     style: "currency",
     currency: "USD",
     minimumIntegerDigits: 2,
-  }).format(aNumber/100);
+  }).format(aNumber / 100);
 }
 
 console.log(statement(invoice, plays));
