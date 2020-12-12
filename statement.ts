@@ -18,7 +18,7 @@ function statement(invoice: Invoice, plays: Plays): string {
   }).format;
 
   for (let perf of invoice.performances) {
-    let thisAmount = amountFor(perf, playFor(perf));
+    let thisAmount = amountFor(perf);
 
     // ボリューム得点のポイントを加算
     volumeCredits += Math.max(perf.audience - 30, 0);
@@ -35,7 +35,7 @@ function statement(invoice: Invoice, plays: Plays): string {
   return result;
 }
 
-function amountFor(aPerformance: Performance, play: Play): number {
+function amountFor(aPerformance: Performance): number {
   let result = 0;
   switch (playFor(aPerformance).type) {
     case "tragedy":
