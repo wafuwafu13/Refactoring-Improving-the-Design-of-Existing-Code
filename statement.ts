@@ -14,6 +14,7 @@ type StatementData = {
     audience: number;
     play?: Play;
     amount?: number;
+    volumeCredits?: number;
   }[];
 };
 
@@ -29,6 +30,7 @@ function statement(invoice: Invoice): string {
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
     result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
     return result;
   }
 
@@ -61,6 +63,16 @@ function statement(invoice: Invoice): string {
     }
     return result;
   }
+
+  function volumeCreditsFor(
+    aPerformance: Required<StatementData>["performances"][0]
+  ): number {
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" == aPerformance.play!.type)
+      result += Math.floor(aPerformance.audience / 5);
+    return result;
+  }
 }
 
 function renderPlainText(data: StatementData): string {
@@ -74,16 +86,6 @@ function renderPlainText(data: StatementData): string {
   result += `You earned ${totalVolumeCredits()} credits\n`;
   return result;
 
-  function volumeCreditsFor(
-    aPerformance: Required<StatementData>["performances"][0]
-  ): number {
-    let result = 0;
-    result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" == aPerformance.play!.type)
-      result += Math.floor(aPerformance.audience / 5);
-    return result;
-  }
-
   function usd(aNumber: number): string {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -95,7 +97,7 @@ function renderPlainText(data: StatementData): string {
   function totalVolumeCredits(): number {
     let result = 0;
     for (let perf of data.performances!) {
-      result += volumeCreditsFor(perf);
+      result += perf.volumeCredits!;
     }
     return result;
   }
