@@ -9,7 +9,7 @@ import {
 function createPerformanceCalculator(
   aPerformance: StatementPerformance,
   aPlay: Play
-) {
+): TragedyCalculator | ComedyCalculator {
   switch (aPlay.type) {
     case "tragedy":
       return new TragedyCalculator(aPerformance, aPlay);
@@ -38,7 +38,7 @@ class PerformanceCalculator {
 }
 
 class TragedyCalculator extends PerformanceCalculator {
-  get amount() {
+  get amount(): number {
     let result = 40000;
     if (this.performance.audience > 30) {
       result += 1000 * (this.performance.audience - 30);
@@ -48,7 +48,7 @@ class TragedyCalculator extends PerformanceCalculator {
 }
 
 class ComedyCalculator extends PerformanceCalculator {
-  get amount() {
+  get amount(): number {
     let result = 30000;
     if (this.performance.audience > 20) {
       result += 10000 + 500 * (this.performance.audience - 20);
@@ -57,7 +57,7 @@ class ComedyCalculator extends PerformanceCalculator {
     return result;
   }
 
-  get volumeCredits() {
+  get volumeCredits(): number {
     return super.volumeCredits + Math.floor(this.performance.audience / 5);
   }
 }
