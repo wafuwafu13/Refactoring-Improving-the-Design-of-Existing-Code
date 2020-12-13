@@ -10,7 +10,14 @@ function createPerformanceCalculator(
   aPerformance: StatementPerformance,
   aPlay: Play
 ) {
-  return new PerformanceCalculator(aPerformance, aPlay);
+  switch (aPlay.type) {
+    case "tragedy":
+      return new TragedyCalculator(aPerformance, aPlay);
+    case "comedy":
+      return new ComedyCalculator(aPerformance, aPlay);
+    default:
+      throw new Error(`未知の演劇の種類: ${aPlay.type}`);
+  }
 }
 
 class PerformanceCalculator {
@@ -25,11 +32,7 @@ class PerformanceCalculator {
     let result = 0;
     switch (this.play.type) {
       case "tragedy":
-        result = 40000;
-        if (this.performance.audience > 30) {
-          result += 1000 * (this.performance.audience - 30);
-        }
-        break;
+        throw "想定外の呼び出し";
       case "comedy":
         result = 30000;
         if (this.performance.audience > 20) {
@@ -51,6 +54,18 @@ class PerformanceCalculator {
     return result;
   }
 }
+
+class TragedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 40000;
+    if (this.performance.audience > 30) {
+      result += 1000 * (this.performance.audience - 30);
+    }
+    return result;
+  }
+}
+
+class ComedyCalculator extends PerformanceCalculator {}
 
 export default function createStatementData(invoice: Invoice): StatementData {
   const statementData: StatementData = {};
