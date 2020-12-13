@@ -6,6 +6,13 @@ import {
   StatementPerformance,
 } from "./@types/types";
 
+function createPerformanceCalculator(
+  aPerformance: StatementPerformance,
+  aPlay: Play
+) {
+  return new PerformanceCalculator(aPerformance, aPlay);
+}
+
 class PerformanceCalculator {
   performance: StatementPerformance;
   play: Play;
@@ -56,7 +63,7 @@ export default function createStatementData(invoice: Invoice): StatementData {
   function enrichPerformance(
     aPerformance: StatementPerformance
   ): StatementPerformance {
-    const calculator = new PerformanceCalculator(
+    const calculator = createPerformanceCalculator(
       aPerformance,
       playFor(aPerformance)
     );
