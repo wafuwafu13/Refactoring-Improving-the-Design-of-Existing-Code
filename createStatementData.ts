@@ -71,19 +71,6 @@ export default function createStatementData(invoice: Invoice): StatementData {
     return plays[aPerformance!.playID];
   }
 
-  function amountFor(aPerformance: StatementPerformance): number {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance))
-      .amount;
-  }
-
-  function volumeCreditsFor(aPerformance: StatementPerformance): number {
-    let result = 0;
-    result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" == aPerformance.play!.type)
-      result += Math.floor(aPerformance.audience / 5);
-    return result;
-  }
-
   function totalAmount(data: StatementData): number {
     return data.performances!.reduce(
       (total: number, p: StatementPerformance) => total + p.amount!,
