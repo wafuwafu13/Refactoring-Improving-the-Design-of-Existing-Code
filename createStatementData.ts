@@ -29,21 +29,7 @@ class PerformanceCalculator {
   }
 
   get amount(): number {
-    let result = 0;
-    switch (this.play.type) {
-      case "tragedy":
-        throw "想定外の呼び出し";
-      case "comedy":
-        result = 30000;
-        if (this.performance.audience > 20) {
-          result += 10000 + 500 * (this.performance.audience - 20);
-        }
-        result += 300 * this.performance.audience;
-        break;
-      default:
-        throw new Error(`unknown type: ${this.play.type}`);
-    }
-    return result;
+    throw new Error("サブクラスの責務");
   }
 
   get volumeCredits(): number {
@@ -65,7 +51,16 @@ class TragedyCalculator extends PerformanceCalculator {
   }
 }
 
-class ComedyCalculator extends PerformanceCalculator {}
+class ComedyCalculator extends PerformanceCalculator {
+  get amount() {
+    let result = 30000;
+    if (this.performance.audience > 20) {
+      result += 10000 + 500 * (this.performance.audience - 20);
+    }
+    result += 300 * this.performance.audience;
+    return result;
+  }
+}
 
 export default function createStatementData(invoice: Invoice): StatementData {
   const statementData: StatementData = {};
