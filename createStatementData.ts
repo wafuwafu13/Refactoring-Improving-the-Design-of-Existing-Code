@@ -65,7 +65,7 @@ class ComedyCalculator extends PerformanceCalculator {
 export default function createStatementData(invoice: Invoice): StatementData {
   const statementData: StatementData = {};
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances.map(enrichPerformance);
+  statementData.performances = invoice.performances.map<StatementPerformance>(enrichPerformance);
   statementData.totalAmount = totalAmount(statementData);
   statementData.totalVolumeCredits = totalVolumeCredits(statementData);
   return statementData;
