@@ -21,3 +21,16 @@ export type StatementData = {
 };
 
 export type StatementPerformance = Required<StatementData>["performances"][0];
+
+export type ProvinceData = {
+  name: string;
+  producers: {
+    name: string;
+    cost: number;
+    production: number;
+  }[];
+  demand: number;
+  price: number;
+};
+
+export type ProducerData = ProvinceData["producers"][0];
