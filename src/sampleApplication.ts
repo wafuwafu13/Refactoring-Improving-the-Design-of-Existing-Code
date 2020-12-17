@@ -1,6 +1,6 @@
 import { ProvinceData, ProducerData } from "../@types/types";
 
-class Province {
+export class Province {
   _name: string;
   _producers: Array<ProducerData>;
   _totalProduction: number;
@@ -113,7 +113,7 @@ class Producer {
   }
 }
 
-function sampleProvinceData(): ProvinceData {
+export function sampleProvinceData(): ProvinceData {
   return {
     name: "Asia",
     producers: [
