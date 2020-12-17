@@ -4,7 +4,7 @@ export class Province {
   _name: string;
   _producers: Array<ProducerData>;
   _totalProduction: number;
-  _demand: number;
+  _demand: number | string;
   _price: number;
   constructor(doc: ProvinceData) {
     this._name = doc.name;
@@ -32,10 +32,10 @@ export class Province {
   set totalProduction(arg: number) {
     this._totalProduction = arg;
   }
-  get demand(): number {
+  get demand(): number | string {
     return this._demand;
   }
-  set demand(arg: number) {
+  set demand(arg: number | string) {
     this._demand = typeof arg === "string" ? parseInt(arg) : arg;
   }
   get price(): number {
@@ -45,7 +45,8 @@ export class Province {
     this._price = typeof arg === "string" ? parseInt(arg) : arg;
   }
 
-  get shortfall(): number {
+  get shortfall(): number | undefined {
+    if (typeof this._demand === "string") return;
     return this._demand - this.totalProduction;
   }
 
@@ -66,11 +67,13 @@ export class Province {
       });
     return result;
   }
-  get demandValue(): number | undefined {
-    if (typeof this.price === "string") return;
+  get demandValue(): number {
+    if (typeof this.price === "string") return 0;
+    if (!this.satisfiedDemand) return 0;
     return this.satisfiedDemand * this.price;
   }
-  get satisfiedDemand(): number {
+  get satisfiedDemand(): number | undefined {
+    if (typeof this._demand === "string") return;
     return Math.min(this._demand, this.totalProduction);
   }
 }
@@ -80,7 +83,7 @@ class Producer {
     name: string;
     producers: Array<ProducerData>;
     totalProduction: number;
-    demand: number;
+    demand: number | string;
     price: number;
   };
   _cost: number;
