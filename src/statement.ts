@@ -1,6 +1,6 @@
-import invoice from "./invoices.json";
+import invoice from "../invoices.json";
 import createStatementData from "./createStatementData";
-import { Invoice, StatementData } from "./@types/types";
+import { Invoice, StatementData } from "../@types/types";
 
 function statement(invoice: Invoice): string {
   return renderPlainText(createStatementData(invoice));

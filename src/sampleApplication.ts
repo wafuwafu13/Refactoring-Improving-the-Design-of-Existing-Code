@@ -1,4 +1,4 @@
-import { ProvinceData, ProducerData } from "./@types/types";
+import { ProvinceData, ProducerData } from "../@types/types";
 
 class Province {
   _name: string;

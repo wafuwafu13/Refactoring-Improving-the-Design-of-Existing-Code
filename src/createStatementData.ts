@@ -1,10 +1,10 @@
-import plays from "./plays.json";
+import plays from "../plays.json";
 import {
   Invoice,
   StatementData,
   Play,
   StatementPerformance,
-} from "./@types/types";
+} from "../@types/types";
 
 function createPerformanceCalculator(
   aPerformance: StatementPerformance,
